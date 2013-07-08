@@ -1,0 +1,176 @@
+
+
+body {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-size:10px;
+    text-align: left;
+    overflow: visible;
+    width: auto;
+}
+
+.search {
+    width: auto;
+    margin: 0 auto;
+    border-style: solid 1px #000000;
+}
+
+.header {
+    width: auto;
+    margin: 10px auto;
+    border:solid 1px #000;
+    background:#000;
+    font-size:16px;
+    font-weight:bold;
+    text-align:center;
+    color:#FFF;
+    padding: 5px 0px;
+    margin-bottom: 0;
+}
+
+#search {
+    border:solid 1px #69c;
+    background: #DBF0F7  ; /* #e8edff;*/
+    padding:5px 0 0 0;
+    margin-top: 0;
+}
+
+#search label {
+    display:block;
+    /*font-weight:bold;*/
+    text-align:right;
+    vertical-align:middle;
+    height:20px;
+    width:80px;
+    float:left;
+    font-size:10px;
+    padding:5px 0 0 0;
+    margin-right: 5px;
+}
+#search .small {
+    color:#333;
+    display:block;
+    font-size:11px;
+    font-weight:normal;
+    text-align:left;
+    width:170px;
+    margin: 10px 0 0 0;
+}
+#search input {
+    float:left;
+    font-size:12px;
+    padding:4px 2px;
+    border:solid 1px #aacfe4;
+    width:170px;
+}
+#search input[type=checkbox] {
+    max-width: 20px;
+}
+#search button {
+    clear:both;
+    width:100px;
+    height:25px;
+    text-align:center;
+    color:#FFFFFF;
+    background:#222;
+    float:left;
+    margin-left: 162px;
+}
+#search select {
+    float:left;
+    border-style: solid 1px #000000;
+    font-size:12px;
+    padding:2px 2px;
+    border:solid 1px #aacfe4;
+    width:175px;
+
+}
+
+
+.host_wrap {
+    margin: 10px auto;
+    /*margin-left: 0px;*/
+    /*border: 1px solid #69c;*/
+}
+
+#hosttab {
+    white-space: nowrap;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-size: 12px;
+    text-align: left;
+    border-collapse: collapse;
+    border: 1px solid #69c;
+}
+#hosttab th {
+    padding: 3px;
+    font-weight: normal;
+    font-size: 12px;
+    #color: #039;
+    color: #FFF;
+    background: #000;
+    border: 1px solid #000;
+}
+#hosttab tbody {
+    background: #e8edff;
+}
+#hosttab td {
+    padding: 3px;
+    color: #558;
+    border-top: 1px dashed #fff;
+    border-right: 1px dashed #fff;
+}
+#hosttab tbody tr:hover td {
+    color: #228;
+    background: #d0dafd;
+}
+
+.stale {
+    color: red;
+}
+
+
+#stab {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-size: 12px;
+    text-align: left;
+    margin: 5px;
+    border-collapse: collapse;
+}
+#stab tbody {
+    background: #DBF0F7  ;/*#e8edff;*/
+}
+#stab td {
+    padding: 2px 2px;
+    color: #558;
+}
+
+
+#search_filter_wrap {
+    /*border: 1px solid #0F0;  /*debug*/
+}
+#search_filter_wrap td {
+    height: auto;
+    /*border: 1px solid #0F0;  /*debug*/
+}
+
+.linkExport {
+    display:block;
+    font-weight:bold;
+    text-align:right;
+    vertical-align:middle;
+    float:left;
+    font-size:8px;
+    padding:2px;
+    margin: 0 0 5px 0px;
+    text-decoration: none;
+    border: 1px solid #000;  /*debug*/
+    color: #336;
+    background: #DDD;
+}
+
+.manpage {
+  font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+  font-size: 12px;
+  padding-left: 10px;
+  color: #558;
+  text-decoration: none;
+}

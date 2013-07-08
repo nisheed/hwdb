@@ -1,0 +1,89 @@
+#!/usr/bin/perl  
+
+# date          : 28/01/2012
+# version       : 1.0
+# suggestions   : nisheed.km@dreamworks.com
+
+use strict;
+use warnings;
+use Getopt::Long;
+ 
+my ($help,$rtag,$list,$prepare,$kick,$update,$file);
+ 
+unless (GetOptions( 'help|j' => \$help, 
+            "rtag|r=s" => \$rtag,           # which release tag
+            "list|l"  => \$list,            # to list all hosts under the rtag
+            "prepare|p"  => \$prepare,      # generate bootlinks for host under the rtag
+            "file|f=s" => \$file,           # which bootlink file 
+            "kick|k"  => \$kick,            # reboot the hosts under the rtag to kick
+            "update|u"  => \$update         # update hwdb for hosts under the rtag
+          )) {
+print "@_\n"; usage(); exit 1; }
+usage() if ( defined $help );
+ 
+sub usage
+{
+  print "Unknown option: @_\n" if ( @_ );
+  print "usage: $0 [options]\n" .  
+        "   Where the options are, \n" .
+        "           -rtag|-r            which release tag\n" . 
+        "           -list|-l            to list all hosts under the rtag\n" .
+        "           -prepare|-p         generate bootlinks for host under the rtag\n" .
+        "           -file|-f            which boot link file\n" .
+        "           -kick|-k            reboot the hosts under the rtag to kick\n" .
+        "           -update|-u          update hwdb for hosts under the rtag\n";
+  exit;
+}
+
+if (! $rtag) {
+    die "rtag cannot be null!\n";
+}
+
+my @hosts = `/work/intranet/hwdb/bin/get_host -r $rtag -f name,osmain,user`;
+my @mail = `/work/intranet/hwdb/bin/get_host -r $rtag -f user`;
+
+if ($list) {
+    print "hosts:\n";
+    foreach my $host (@hosts) {
+        chomp($host);
+        print $host . "\n";
+    }
+
+    print "\nnotify the following users: \n";
+    foreach my $m (@mail) {
+        chomp($m);
+        print $m . '@example.com,' if $m !~ m/-/;
+    }
+    print "\n\n";
+
+}
+
+@hosts = `/work/intranet/hwdb/bin/get_host -r $rtag -f name`;
+
+if ($prepare) {
+    if ( $file) {
+        foreach my $host (@hosts) {
+            chomp($host);
+            system("cd /tftpboot/pxelinux.cfg && ./genbootlink -h $host -f $file && /tftpboot/pxelinux.cfg/who-is-linked.pl");
+        }
+    } else {
+        print "no link file specified\n";
+    }
+}
+
+my $temp = `mktemp /tmp/kick.XXXXX`;
+open (FILE, ">$temp") or die $!;
+foreach my $host (@hosts) {
+    chomp($host);
+    print FILE "$host\n";
+}
+close FILE; 
+
+if ($kick) {
+    print "copy and execute the following command \n";
+    print "dsh -w - \"shutdown -n now\" < $temp";
+}
+
+if ($update) {
+    system("/work/intranet/hwdb/bin/hwdb_update_cron.sh $temp");
+}

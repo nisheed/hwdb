@@ -1,0 +1,122 @@
+#!/usr/bin/perl  
+
+# date          : 23/01/2012
+# version       : 1.1
+#                   -(1.0 23/01/12) initial version.
+#                   -(1.1 24/01/12) added slno,warranty dates.
+#                   -(2.0 29/03/12) RESTified version.
+# suggestions   : nisheed.km@dreamworks.com
+
+use strict;
+use warnings;
+use DBI;
+use Getopt::Long;
+use Data::Dumper;
+use lib "/work/syseng/nkundhapu/perl/lib";
+use JSON;
+ 
+my $sep = "|";
+my $url = "http://hwdb.example.com/v1.0/host";
+my $exec = getlogin || getpwuid($<) || "nobody";
+chomp($exec);
+
+my %opt;
+ 
+unless (GetOptions(\%opt, 'help|h', 'name|n=s', 'slno|s=s', 'atag|a=s',
+            'type|t=s', 'model|m=s', 'dept|d=s', 'location|l=s', 'crole|c=s',
+            'rtag|r=s', 'owner|o=s', 'user|u=s', 'status=s', 'osmain=s',
+            'osdwa=s', 'fields|f=s', 'gcard=s', 'gver=s', 'ram=s', 'cpu=s'
+          )) {
+print "@_\n"; usage(); exit 1; }
+
+usage() if ( defined $opt{help} );
+ 
+sub usage
+{
+  print "Unknown option: @_\n" if ( @_ );
+  print "usage: $0 [options]\n" .  
+        "   Where the options are, \n" .
+        "           -name|-n        hostname \n" . 
+        "           -slno|-s        serial number \n" . 
+        "           -atag|-a        asset tag\n" .
+        "           -type|-t        server|desktop|vm|farm\n" .
+        "           -model|-m       bl460c|xw9400|z800|etc\n" .
+        "           -dept|-d        lighting|cfx|etc\n" .
+        "           -location|-l    tr-room1|cube102|etc\n" .
+        "           -crole|-c       condor role such as submitter|cm|schedd \n" .
+        "           -rtag|-r        release tag such as alpha|beta|prod-1|prod-2 etc\n" .
+        "           -owner|-o       who the host was assigned to\n" .
+        "           -user|u-        the current user\n" .
+        "           -osmain         RedHat/Microsoft version of the OS\n" .
+        "           -osdwa          DWA version of the OS\n" .
+        "           -gcard          Graphics Card\n" .
+        "           -gver           Graphics driver version\n" .
+        "           -cpu            Number of CPUs\n" .
+        "           -ram            RAM\n" .
+        "           -status         status such as prod|test|decomm etc\n" . 
+        "           -fields|-f      output fiedls to be displayed\n" ;
+  exit;
+}
+
+sub get_host {
+  my $querystring;
+  while (my ($key, $value) = each(%opt)){
+      $querystring .= "&" . $key . "=" . $value;
+  } 
+  $querystring =~ s/&// if ($querystring);
+  $querystring ||= '';
+  my $output =    `curl -s -H "Exec:$exec" -X GET "$url?$querystring"`;
+  if( ! $output ) { exit 0; }
+  #print $output;
+  my $json = new JSON;
+  
+  #$json = $json->canonical(0);
+  #my $perl_scalar = $json->utf8->decode($output);
+  my $perl_scalar = JSON->new->utf8->decode($output);
+  #print Dumper($perl_scalar->{'hosts'}[0]);
+
+  if(ref($perl_scalar) ne "HASH") { exit 0; }
+
+  my $harr = $perl_scalar->{'hosts'};
+  #print Dumper $harr;
+
+  my $hent;
+  my $print_head = 0;
+  my $d_output = '';
+  if ( defined $opt{fields} ) {
+    my @flds = split(/,/,$opt{fields});
+    foreach $hent (@$harr) {
+      $d_output = '';
+      foreach my $f (@flds) {
+        $d_output .= $hent->{$f} . ",";
+      }
+      print substr($d_output,0,length($d_output)-1) . "\n";
+    }
+  } else {
+    foreach $hent (@$harr) {
+       $d_output = '';
+       $d_output .= sprintf("%-30s", $hent->{'name'}) if (defined $hent->{'name'});
+       $d_output .= sprintf("%-15s", $hent->{'slno'}) if (defined $hent->{'slno'});
+       $d_output .= sprintf("%-10s", $hent->{'atag'}) if (defined $hent->{'atag'});
+       $d_output .= sprintf("%-15s", $hent->{'type'}) if (defined $hent->{'type'});
+       $d_output .= sprintf("%-15s", $hent->{'model'}) if (defined $hent->{'model'});
+       $d_output .= sprintf("%-15s", $hent->{'dept'}) if (defined $hent->{'dept'});
+       $d_output .= sprintf("%-15s", $hent->{'location'}) if (defined $hent->{'location'});
+       $d_output .= sprintf("%-10s", $hent->{'crole'}) if (defined $hent->{'crole'});
+       $d_output .= sprintf("%-10s", $hent->{'rtag'}) if (defined $hent->{'rtag'});
+       $d_output .= sprintf("%-30s", $hent->{'owner'}) if (defined $hent->{'owner'});
+       $d_output .= sprintf("%-15s", $hent->{'user'}) if (defined $hent->{'user'});
+       $d_output .= sprintf("%-10s", $hent->{'status'}) if (defined $hent->{'status'});
+       $d_output .= sprintf("%-15s", $hent->{'osmain'}) if (defined $hent->{'osmain'});
+       $d_output .= sprintf("%-15s", $hent->{'osdwa'}) if (defined $hent->{'osdwa'});
+       $d_output .= sprintf("%-30s", $hent->{'gcard'}) if (defined $hent->{'gcard'});
+       $d_output .= sprintf("%-10s", $hent->{'gver'}) if (defined $hent->{'gver'});
+       $d_output .= sprintf("%-10s", $hent->{'ram'}) if (defined $hent->{'ram'});
+       $d_output .= sprintf("%-5s", $hent->{'cpu'}) if (defined $hent->{'cpu'});
+       print $d_output . "\n";
+    } 
+  }
+}
+
+get_host();
+

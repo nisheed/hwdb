@@ -1,0 +1,66 @@
+#!/usr/bin/perl  
+
+# date          : 23/01/2012
+# version       : 1.1
+#                   -(1.0 23/01/12) initial version.
+#                   -(1.1 24/01/12) added slno,warranty dates.
+#                   -(2.0 29/03/12) RESTified version.
+# suggestions   : nisheed.km@dreamworks.com
+
+use strict;
+use warnings;
+use DBI;
+use Getopt::Long;
+use Data::Dumper;
+use lib "/work/syseng/nkundhapu/perl/lib";
+use JSON;
+ 
+my %opt;
+my $exec = getlogin || getpwuid($<) || "nobody";
+chomp($exec);
+
+ 
+unless (GetOptions(\%opt, 'help|h', 'name|n=s', 'slno|s=s', 'atag|a=s',
+            'type|t=s', 'model|m=s', 'dept|d=s', 'location|l=s', 'crole|c=s',
+            'rtag|r=s', 'owner|o=s', 'user|u=s', 'status=s', 'osmain=s',
+            'osdwa=s', 'wstart=s', 'wend=s', 'fields|f=s', 'gcard=s', 'gver=s', 'ram=s', 'cpu=s'
+          )) {
+print "@_\n"; usage(); exit 1; }
+
+usage() if ( defined $opt{help} );
+ 
+sub usage
+{
+  print "Unknown option: @_\n" if ( @_ );
+  print "usage: $0 [options]\n" .  
+        "   Where the options are, \n" .
+        "           -name|-n        hostname \n" . 
+        "           -slno|-s        serial number \n" . 
+        "           -atag|-a        asset tag\n" .
+        "           -type|-t        server|desktop|vm|farm\n" .
+        "           -model|-m       bl460c|xw9400|z800|etc\n" .
+        "           -dept|-d        lighting|cfx|etc\n" .
+        "           -location|-l    tr-room1|cube102|etc\n" .
+        "           -crole|-c       condor role such as submitter|cm|schedd \n" .
+        "           -rtag|-r        release tag such as alpha|beta|prod-1|prod-2 etc\n" .
+        "           -owner|-o       who the host was assigned to\n" .
+        "           -user|u-        the current user\n" .
+        "           -osmain         RedHat/Microsoft version of the OS\n" .
+        "           -osdwa          DWA version of the OS\n" .
+        "           -wstart         start of warranty date (YYYY-MM-DD)\n" .
+        "           -wend           end of warranty date (YYYY-MM-DD)\n" .
+        "           -status      status such as prod|test|decomm etc\n" . 
+        "           -fields|-f      output fiedls to be displayed\n" ;
+  exit;
+}
+
+
+sub add_host {
+    my $jdata = encode_json( \%opt );
+    $jdata = '{"host":' . $jdata . '}'; 
+    my $cmd = "curl -s -H 'Exec:$exec' -X POST 'http://hwdb.example.com/v1.0/host' --data '$jdata'";
+    system($cmd);
+}
+
+add_host();
+

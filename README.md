@@ -3,6 +3,8 @@ hwdb
 
 A simple RESTful hardware database system with GUI. 
 
+![hwdb screenshot](https://github.com/nisheed/hwdb/img/hwdb.png)
+
 Features:
 - RESTful
 - GUI with search and filter

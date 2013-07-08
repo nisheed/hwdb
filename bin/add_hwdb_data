@@ -77,6 +77,6 @@ my $cmd =q:grep MemTotal /proc/meminfo | awk '{print $2}':;
 my $mem = `$cmd`;
 chomp($mem);
 
-$cmd = "/work/intranet/hwdb/bin/add_host -name $host -slno $slno -u \'$user\' -o \'$owner\' -osmain \'$osmain\' -osdwa \'$osdwa\' -gcard \'$gcard\' -gver \'$gver\' -cpu \'$ncpu\' -ram \'$mem\'\n" ;
+$cmd = "/nfslocation/hwdb/bin/add_host -name $host -slno $slno -u \'$user\' -o \'$owner\' -osmain \'$osmain\' -osdwa \'$osdwa\' -gcard \'$gcard\' -gver \'$gver\' -cpu \'$ncpu\' -ram \'$mem\'\n" ;
 system($cmd);
 

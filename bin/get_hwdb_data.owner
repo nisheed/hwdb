@@ -53,6 +53,6 @@ if ( $user ne '-' ) {
     $owner =~ s/\s+$//;
 }
 
-#print "/work/intranet/hwdb/bin/update_host -h $host -slno $slno -u $user -o \'$owner\' -osmain $osmain -osdwa $osdwa\n" ;
-print "/work/intranet/hwdb/bin/update_host -name $host -o \'$owner\'\n" ;
+#print "/nfslocation/hwdb/bin/update_host -h $host -slno $slno -u $user -o \'$owner\' -osmain $osmain -osdwa $osdwa\n" ;
+print "/nfslocation/hwdb/bin/update_host -name $host -o \'$owner\'\n" ;
 

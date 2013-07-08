@@ -12,7 +12,7 @@ use warnings;
 use DBI;
 use Getopt::Long;
 use Data::Dumper;
-use lib "/work/syseng/nkundhapu/perl/lib";
+use lib "/nfslocation/hwdb/lib";
 use JSON;
  
 my %opt;

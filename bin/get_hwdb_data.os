@@ -80,5 +80,5 @@ chomp($mem);
 
 $host ||= '-'; $slno ||= '-'; $user ||= '-'; $owner ||= '-'; $osmain ||= '-'; $osdwa ||= '-';
 
-print "/work/intranet/hwdb/bin/update_host -name $host -u \'$user\' -osmain \'$osmain\' -osdwa \'$osdwa\' -gcard \'$gcard\' -gver \'$gver\' -cpu \'$ncpu\' -ram \'$mem\'\n" ;
+print "/nfslocation/hwdb/bin/update_host -name $host -u \'$user\' -osmain \'$osmain\' -osdwa \'$osdwa\' -gcard \'$gcard\' -gver \'$gver\' -cpu \'$ncpu\' -ram \'$mem\'\n" ;
 

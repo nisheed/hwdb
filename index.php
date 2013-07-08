@@ -489,7 +489,7 @@ $csv = $filter . "\n" . $csv;
 //echo $csv;
 
 if ($csv) {
-    $myFile = "/work/intranet/hwdb/hwdb.csv";
+    $myFile = "/nfslocation/hwdb/hwdb.csv";
     $fh = fopen($myFile, 'w') or die("can't open CSV file\n");;
     fwrite($fh, $csv);
     fclose($fh);

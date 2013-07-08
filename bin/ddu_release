@@ -39,8 +39,8 @@ if (! $rtag) {
     die "rtag cannot be null!\n";
 }
 
-my @hosts = `/work/intranet/hwdb/bin/get_host -r $rtag -f name,osmain,user`;
-my @mail = `/work/intranet/hwdb/bin/get_host -r $rtag -f user`;
+my @hosts = `/nfslocation/hwdb/bin/get_host -r $rtag -f name,osmain,user`;
+my @mail = `/nfslocation/hwdb/bin/get_host -r $rtag -f user`;
 
 if ($list) {
     print "hosts:\n";
@@ -58,7 +58,7 @@ if ($list) {
 
 }
 
-@hosts = `/work/intranet/hwdb/bin/get_host -r $rtag -f name`;
+@hosts = `/nfslocation/hwdb/bin/get_host -r $rtag -f name`;
 
 if ($prepare) {
     if ( $file) {
@@ -85,5 +85,5 @@ if ($kick) {
 }
 
 if ($update) {
-    system("/work/intranet/hwdb/bin/hwdb_update_cron.sh $temp");
+    system("/nfslocation/hwdb/bin/hwdb_update_cron.sh $temp");
 }

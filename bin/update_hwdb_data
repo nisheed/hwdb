@@ -5,22 +5,22 @@
 
 #use strict;
 #use warnings;
-use lib "/work/syseng/nkundhapu/perl/lib";
+use lib "/nfslocation/hwdb/lib";
 use HWDBCollect;
 
 my $action;
 my $self = gethostname;
 
 sub hexists {
-    my $ans = `/work/intranet/hwdb/bin/get_host -name $self -f name`;
+    my $ans = `/nfslocation/hwdb/bin/get_host -name $self -f name`;
     chomp($ans);
     return ($ans =~ $self ? 1 : 0 );  
 }
 
 if (hexists) {
-    $action = "/work/intranet/hwdb/bin/update_host";
+    $action = "/nfslocation/hwdb/bin/update_host";
 } else {
-    $action = "/work/intranet/hwdb/bin/add_host";
+    $action = "/nfslocation/hwdb/bin/add_host";
 }
 
 my $cmd = $action . " -name \'" . gethostname . "\' -slno \'" . getslno . "\' " . 

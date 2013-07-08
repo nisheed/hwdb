@@ -3,7 +3,7 @@ hwdb
 
 A simple RESTful hardware database system with GUI. 
 
-[hwdb screenshot!](img/hwdb.png)
+![hwdb screenshot!](img/hwdb.png?raw=true)
 
 Features:
 - RESTful
